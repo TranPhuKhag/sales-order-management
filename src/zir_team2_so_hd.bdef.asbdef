@@ -8,7 +8,11 @@ implementation in class ZBP_IR_TEAM2_SO_HD unique
 persistent table zteam2_so_hd
 extensible
 draft table zteam2_so_hd_d
-etag master LocalLastChangedAt
+// Use the total ETag as Header ETag: Item/ScheduleLine determinations update
+// Header fields (NetAmount, OverallStatus) in the draft, which changes
+// LocalLastChangedAt and makes the UI's cached Header ETag stale (HTTP 412 on
+// Prepare/Apply from the Item page). LastChangedAt only changes on activation.
+etag master LastChangedAt
 lock master total etag LastChangedAt
 authorization master ( global, instance )
 early numbering
