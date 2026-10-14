@@ -12,6 +12,20 @@
 
 annotate view ZC_TEAM2_SCHED_LN with
 {
+  // Object Page of the Schedule Line. Without facets the Fiori app has no
+  // Schedule Line page: after "Create" the URL points to a page that is never
+  // rendered, the router gets out of sync and "Apply" on the Item page hangs.
+  @UI.facet: [
+    {
+      id: 'ScheduleLineGeneralInfo',
+      label: 'Schedule Line Information',
+      purpose: #STANDARD,
+      position: 10,
+      type: #IDENTIFICATION_REFERENCE
+    }
+  ]
+
+  @UI.identification: [ { position: 10, label: 'Schedule Line' } ]
   @UI.lineItem: [
     {
       position: 10,
@@ -26,6 +40,7 @@ annotate view ZC_TEAM2_SCHED_LN with
   ]
   ScheduleLineId;
 
+  @UI.identification: [ { position: 20, label: 'Requested Delivery Date' } ]
   @UI.lineItem: [
     {
       position: 20,
@@ -34,6 +49,7 @@ annotate view ZC_TEAM2_SCHED_LN with
   ]
   RequestedDeliveryDate;
 
+  @UI.identification: [ { position: 30, label: 'Requested Quantity' } ]
   @UI.lineItem: [
     {
       position: 30,
@@ -42,6 +58,7 @@ annotate view ZC_TEAM2_SCHED_LN with
   ]
   RequestedQuantity;
 
+  @UI.identification: [ { position: 40, label: 'Confirmed Delivery Date' } ]
   @UI.lineItem: [
     {
       position: 40,
@@ -50,6 +67,7 @@ annotate view ZC_TEAM2_SCHED_LN with
   ]
   ConfirmedDeliveryDate;
 
+  @UI.identification: [ { position: 50, label: 'Confirmed Quantity' } ]
   @UI.lineItem: [
     {
       position: 50,
@@ -61,6 +79,7 @@ annotate view ZC_TEAM2_SCHED_LN with
 @UI.hidden: true
   SalesUnit;
 
+  @UI.identification: [ { position: 60, label: 'Availability Status', criticality: 'AvailabilityCriticality' } ]
   @UI.lineItem: [
     {
       position: 60,
