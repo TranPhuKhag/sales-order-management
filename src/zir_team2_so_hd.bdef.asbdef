@@ -73,7 +73,7 @@ early numbering
     // Item validations
     validation Item~empty_on_save;
     validation Item~check_requested_quantity;
-    //    validation Item~check_schedule_quantity;
+    validation Item~check_schedule_quantity;
 
     // Schedule Line validations
     validation ScheduleLine~check_requested_quantity;
@@ -124,7 +124,7 @@ early numbering
 
   validation empty_on_save on save { field Plant; }
   validation check_requested_quantity on save { create; field RequestedQuantity; }
-  //  validation check_schedule_quantity on save { create; field RequestedQuantity; }
+  validation check_schedule_quantity on save { field RequestedQuantity; }
   determination refresh_delivery_status on modify { field RequestedQuantity; }
   determination set_product_details on modify { field ProductId; }
   determination calculate_item_net_amount on modify { create; field RequestedQuantity, NetPrice; } //  create;
@@ -147,7 +147,7 @@ early numbering
     field ProductId affects field ProductDescription, field Plant, field SalesUnit, field NetPrice, field CurrencyCode, field NetAmount;
 
     // Refresh Item Net Amount and delivery status.
-    field RequestedQuantity affects field NetAmount, field DeliveryStatus, field DeliverCriticality;
+    field RequestedQuantity affects field NetAmount, field DeliveryStatus, field DeliverCriticality, entity _ScheduleLine;
     field NetPrice affects field NetAmount;
     field ConfirmedQuantity affects field DeliveryStatus, field DeliverCriticality;
 
@@ -203,6 +203,7 @@ early numbering
   determination set_delivery_status on modify { field ConfirmedQuantity, RequestedQuantity; }
 
   action ( features : instance ) confirmDelivery result [1] $self;
+  internal action recalc_availability;
 
   field ( readonly ) AvailabilityStatus, ConfirmedQuantity, ConfirmedDeliveryDate;
   side effects

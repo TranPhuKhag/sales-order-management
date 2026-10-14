@@ -50,6 +50,10 @@ CLASS lhc_scheduleline DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys   FOR ACTION ScheduleLine~confirmDelivery
       RESULT    result.
 
+    METHODS recalc_availability
+      FOR MODIFY
+      IMPORTING keys FOR ACTION ScheduleLine~recalc_availability.
+
 *&---------------------------------------------------------------------*
 * Determinations
 *&---------------------------------------------------------------------*
@@ -369,6 +373,23 @@ CLASS lhc_scheduleline IMPLEMENTATION.
 * --> KEYS           : Schedule Lines that trigger the determination
 *---------------------------------------------------------------------*
   METHOD setAvailability.
+    " Shared with Item changes (RequestedQuantity) via the internal action.
+    MODIFY ENTITIES OF zir_team2_so_hd IN LOCAL MODE
+      ENTITY ScheduleLine
+        EXECUTE recalc_availability
+        FROM CORRESPONDING #( keys )
+      FAILED DATA(ls_failed)
+      REPORTED DATA(ls_reported).
+  ENDMETHOD.
+
+**********************************************************************
+* Internal Action: Recalculate Schedule Line Availability Status
+**********************************************************************
+* Content explanation:
+*   Called on Schedule Line changes and when the parent Item
+*   Requested Quantity changes, so the status never stays stale.
+*---------------------------------------------------------------------*
+  METHOD recalc_availability.
      DATA lt_schedule_updates TYPE TABLE FOR UPDATE zir_team2_so_hd\\ScheduleLine.
 
     " Read affected Schedule Lines in the transactional buffer.

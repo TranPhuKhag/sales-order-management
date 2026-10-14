@@ -8,6 +8,7 @@ CLASS lhc_Item DEFINITION INHERITING FROM cl_abap_behavior_handler.
         product_id         TYPE string VALUE 'PRODUCT_ID',
         plant              TYPE string VALUE 'PLANT',
         requested_quantity TYPE string VALUE 'REQUESTED_QUANTITY',
+        schedule_quantity  TYPE string VALUE 'SCHEDULE_QUANTITY',
       END OF lc_state_area.
 
 *&---------------------------------------------------------------------*
@@ -53,6 +54,10 @@ CLASS lhc_Item DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS check_requested_quantity
       FOR VALIDATE ON SAVE
       IMPORTING keys FOR Item~check_requested_quantity.
+
+    METHODS check_schedule_quantity
+      FOR VALIDATE ON SAVE
+      IMPORTING keys FOR Item~check_schedule_quantity.
     METHODS set_overall_status FOR DETERMINE ON MODIFY
        keys FOR Item~set_overall_status.
     METHODS recalc_item_delivery_status FOR MODIFY
@@ -826,5 +831,76 @@ METHOD refresh_delivery_status.
     FROM CORRESPONDING #( keys )
     FAILED DATA(ls_failed)
     REPORTED DATA(ls_reported).
+
+  " Schedule Line availability depends on the Item Requested Quantity;
+  " re-evaluate it, otherwise the status stays as calculated for the old quantity.
+  READ ENTITIES OF zir_team2_so_hd IN LOCAL MODE
+    ENTITY Item BY \_ScheduleLine
+      FROM CORRESPONDING #( keys )
+    LINK DATA(lt_sched_links).
+
+  IF lt_sched_links IS INITIAL.
+    RETURN.
+  ENDIF.
+
+  MODIFY ENTITIES OF zir_team2_so_hd IN LOCAL MODE
+    ENTITY ScheduleLine EXECUTE recalc_availability
+    FROM VALUE #( FOR ls_link IN lt_sched_links ( %tky = ls_link-target-%tky ) )
+    FAILED DATA(ls_failed_sched)
+    REPORTED DATA(ls_reported_sched).
+ENDMETHOD.
+
+**********************************************************************
+* Validation: Item Requested Quantity vs. Schedule Line Quantities
+**********************************************************************
+* Content explanation:
+*   The total Requested Quantity of all Schedule Lines must not exceed
+*   the Item Requested Quantity. The Schedule Line validation only runs
+*   when a Schedule Line changes; this one covers lowering the Item
+*   quantity below the already planned Schedule Lines.
+*---------------------------------------------------------------------*
+METHOD check_schedule_quantity.
+  READ ENTITIES OF zir_team2_so_hd IN LOCAL MODE
+    ENTITY Item
+      FIELDS ( RequestedQuantity )
+      WITH CORRESPONDING #( keys )
+    RESULT DATA(lt_items).
+
+  READ ENTITIES OF zir_team2_so_hd IN LOCAL MODE
+    ENTITY Item BY \_ScheduleLine
+      FIELDS ( RequestedQuantity )
+      WITH CORRESPONDING #( keys )
+    RESULT DATA(lt_schedule_lines)
+    LINK DATA(lt_links).
+
+  LOOP AT lt_items ASSIGNING FIELD-SYMBOL(<lfs_item>).
+    " Clear previous state messages.
+    APPEND VALUE #( %tky        = <lfs_item>-%tky
+                    %state_area = lc_state_area-schedule_quantity
+                  ) TO reported-item.
+
+    DATA(lv_total_quantity) = CONV decfloat34( 0 ).
+    LOOP AT lt_links ASSIGNING FIELD-SYMBOL(<lfs_link>)
+      WHERE source-%tky = <lfs_item>-%tky.
+      READ TABLE lt_schedule_lines ASSIGNING FIELD-SYMBOL(<lfs_line>)
+        WITH KEY %tky = <lfs_link>-target-%tky.
+      IF sy-subrc = 0.
+        lv_total_quantity += CONV decfloat34( <lfs_line>-RequestedQuantity ).
+      ENDIF.
+    ENDLOOP.
+
+    IF lv_total_quantity > CONV decfloat34( <lfs_item>-RequestedQuantity ).
+      APPEND VALUE #( %tky = <lfs_item>-%tky ) TO failed-item.
+      APPEND VALUE #(
+        %tky        = <lfs_item>-%tky
+        %state_area = lc_state_area-schedule_quantity
+        %msg        = NEW zcm_team2_so(
+          im_textid   = zcm_team2_so=>c_schedule_quantity_exceeded
+          im_severity = if_abap_behv_message=>severity-error
+        )
+        %element-RequestedQuantity = if_abap_behv=>mk-on
+      ) TO reported-item.
+    ENDIF.
+  ENDLOOP.
 ENDMETHOD.
 ENDCLASS.
