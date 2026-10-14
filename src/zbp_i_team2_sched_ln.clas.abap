@@ -1,0 +1,5 @@
+CLASS zbp_i_team2_sched_ln DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zir_team2_so_hd.
+ENDCLASS.
+
+CLASS zbp_i_team2_sched_ln IMPLEMENTATION.
+ENDCLASS.

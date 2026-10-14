@@ -1,0 +1,193 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: {
+  typeName: 'Sales Order Item',
+  typeNamePlural: 'Sales Order Items',
+  title: {
+    type: #STANDARD,
+    value: 'SalesOrderItemId'
+  },
+  description: {
+    type: #STANDARD,
+    value: 'ProductId'
+  }
+}
+
+
+annotate view ZC_TEAM2_SO_IT with
+{
+  @UI.facet: [
+    {
+      id: 'ItemGeneralInfo',
+      label: 'Item Information',
+      purpose: #STANDARD,
+      position: 10,
+      type: #IDENTIFICATION_REFERENCE
+    },
+    {
+      id: 'ScheduleLines',
+      label: 'Schedule Lines',
+      purpose: #STANDARD,
+      position: 20,
+      type: #LINEITEM_REFERENCE,
+      targetElement: '_ScheduleLine'
+    }
+  ]
+
+
+  @UI.identification: [
+    {
+      position: 10,
+      label: 'Item'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 10,
+      label: 'Item'
+    }
+  ]
+  SalesOrderItemId;
+
+
+  @UI.identification: [
+    {
+      position: 20,
+      label: 'Product'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 20,
+      label: 'Product'
+    }
+  ]
+  ProductId;
+  @UI.identification: [
+  {
+    position: 30,
+    label: 'Product Description'
+  }
+  ]
+  @UI.lineItem: [
+    {
+      position: 30,
+      label: 'Product Description'
+    }
+  ]
+  ProductDescription;
+
+  @UI.identification: [
+    {
+      position: 40,
+      label: 'Plant'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 40,
+      label: 'Plant'
+    }
+  ]
+  Plant;
+
+  @UI.identification: [
+    {
+      position: 50,
+      label: 'Requested Quantity'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 50,
+      label: 'Requested Quantity'
+    }
+  ]
+  RequestedQuantity;
+
+  @UI.identification: [
+    {
+      position: 60,
+      label: 'Confirmed Quantity'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 60,
+      label: 'Confirmed Quantity'
+    }
+  ]
+  ConfirmedQuantity;
+
+  @UI.identification: [
+    {
+      position: 70,
+      label: 'Sales Unit'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 70,
+      label: 'Sales Unit'
+    }
+  ]
+  SalesUnit;
+
+  @UI.identification: [
+    {
+      position: 80,
+      label: 'Net Price'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 80,
+      label: 'Net Price'
+    }
+  ]
+  NetPrice;
+
+  @UI.identification: [
+    {
+      position: 90,
+      label: 'Net Amount'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 90,
+      label: 'Net Amount'
+    }
+  ]
+  NetAmount;
+
+  @UI.identification: [
+    {
+      position: 100,
+      label: 'Currency'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 100,
+      label: 'Currency'
+    }
+  ]
+  CurrencyCode;
+  @UI.identification: [
+    {
+      position: 110,
+      label: 'Delivery Status',
+       criticality: 'DeliverCriticality'
+    }
+  ]
+  @UI.lineItem: [
+    {
+      position: 110,
+      label: 'Delivery Status',
+       criticality: 'DeliverCriticality'
+    }
+  ]
+  DeliveryStatus;
+
+}

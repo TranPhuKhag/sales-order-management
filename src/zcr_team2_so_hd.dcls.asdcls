@@ -1,0 +1,8 @@
+@EndUserText.label: 'ZCR_TEAM2_SO_HD'
+@MappingRole: true
+define role ZCR_TEAM2_SO_HD {
+
+  grant select on ZCR_TEAM2_SO_HD
+    where INHERITING CONDITIONS FROM ENTITY ZIR_TEAM2_SO_HD;
+
+}

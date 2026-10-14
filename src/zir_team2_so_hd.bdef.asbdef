@@ -1,0 +1,230 @@
+managed;
+strict ( 2 );
+with draft;
+extensible;
+
+define behavior for ZIR_TEAM2_SO_HD alias Header
+implementation in class ZBP_IR_TEAM2_SO_HD unique
+persistent table zteam2_so_hd
+extensible
+draft table zteam2_so_hd_d
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global, instance )
+early numbering
+{
+  field ( readonly ) NetAmount, LifecycleStatus, OverallStatus, SalesOrderId, CreatedBy, CreatedAt, LocalLastChangedBy, LocalLastChangedAt, LastChangedAt;
+  field ( mandatory ) SalesOrderType, SalesOrderDate, SoldToPartyId;
+  create;
+  update ( features : instance );
+  delete ( features : instance );
+
+  validation check_sold_to_party on save { field SoldToPartyId; }
+  validation check_ship_to_party on save { create; field ShipToPartyId; }
+
+  validation check_requested_delivery_date on save { field SalesOrderDate, RequestedDeliveryDate; }
+  validation empty_on_save on save { create; field SalesOrderDate, SalesOrderType, SoldToPartyId, SalesOrganization, DistributionChannel, Division; }
+  validation check_sales_area on save { create; field SalesOrganization, DistributionChannel, Division; }
+
+
+  determination set_initial_status on modify { create; }
+
+  association _Item { create ( features : instance ); with draft; } association _ScheduleLine { with draft; }
+
+  internal action recalc_header_net_amount;
+  // Recalculate the overall status of the Sales Order.
+  action recalc_overall_status;
+
+  side effects
+  {
+    field SalesOrderType affects field OverallStatus;
+    field LifecycleStatus affects field LifecycleStatusCriticality; // , permissions ( association _Item ), permissions ( action confirmOrder ), permissions ( action rejectOrder );
+    field OverallStatus affects field OverallStatusCriticality;
+    //  action confirmOrder affects field LifecycleStatus, field LifecycleStatusCriticality, permissions ( association _Item ), permissions ( action confirmOrder ), permissions ( action rejectOrder );
+    //  action rejectOrder affects field LifecycleStatus, field OverallStatus, field LifecycleStatusCriticality, field OverallStatusCriticality;
+    entity _Item affects field NetAmount, field CurrencyCode ;
+      field SoldToPartyId affects $self;
+      field ShipToPartyId affects $self;
+
+  }
+
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    // Header validations
+    validation check_sold_to_party;
+    validation check_ship_to_party;
+
+    validation check_requested_delivery_date;
+    validation empty_on_save;
+    validation check_sales_area;
+
+    // Item validations
+    validation Item~empty_on_save;
+    validation Item~check_requested_quantity;
+    //    validation Item~check_schedule_quantity;
+
+    // Schedule Line validations
+    validation ScheduleLine~check_requested_quantity;
+    validation ScheduleLine~check_confirmed_quantity;
+    //    validation ScheduleLine~check_item_total;
+  }
+  mapping for zteam2_so_hd corresponding extensible
+    {
+      SalesOrderId          = SALES_ORDER_ID;
+      SalesOrderType        = SALES_ORDER_TYPE;
+      SoldToPartyId         = SOLD_TO_PARTY_ID;
+      ShipToPartyId         = SHIP_TO_PARTY_ID;
+      SalesOrganization     = SALES_ORGANIZATION;
+      DistributionChannel   = DISTRIBUTION_CHANNEL;
+      Division              = DIVISION;
+      SalesOrderDate        = SALES_ORDER_DATE;
+      PricingDate           = PRICING_DATE;
+      RequestedDeliveryDate = REQUESTED_DELIVERY_DATE;
+      NetAmount             = NET_AMOUNT;
+      CurrencyCode          = CURRENCY_CODE;
+      LifecycleStatus       = LIFECYCLE_STATUS;
+      OverallStatus         = OVERALL_STATUS;
+      Reason                = REASON;
+      CreatedBy             = CREATED_BY;
+      CreatedAt             = CREATED_AT;
+      LocalLastChangedBy    = LOCAL_LAST_CHANGED_BY;
+      LocalLastChangedAt    = LOCAL_LAST_CHANGED_AT;
+      LastChangedAt         = LAST_CHANGED_AT;
+    }
+}
+
+define behavior for ZI_TEAM2_SO_IT alias Item
+implementation in class ZBP_I_TEAM2_SO_IT unique
+persistent table zteam2_so_it
+extensible
+draft table zteam2_so_it_d
+etag master LocalLastChangedAt
+lock dependent by _Header
+authorization dependent by _Header
+early numbering
+{
+  field ( readonly ) SalesOrderId, SalesOrderItemId, ConfirmedQuantity, NetAmount, CreatedBy, CreatedAt, LocalLastChangedBy, LocalLastChangedAt, LastChangedAt;
+  field ( readonly ) ProductDescription, SalesUnit, DeliveryStatus, DeliverCriticality;
+  field ( mandatory ) ProductId, Plant, RequestedQuantity;
+
+  update ( features : instance );
+  delete ( features : instance );
+
+  validation empty_on_save on save { field Plant; }
+  validation check_requested_quantity on save { create; field RequestedQuantity; }
+  //  validation check_schedule_quantity on save { create; field RequestedQuantity; }
+  determination refresh_delivery_status on modify { field RequestedQuantity; }
+  determination set_product_details on modify { field ProductId; }
+  determination calculate_item_net_amount on modify { create; field RequestedQuantity, NetPrice; } //  create;
+  determination calculate_header_net_amount on modify { create; delete; field NetAmount, CurrencyCode; } //  create;
+  determination set_delivery_status on modify { create; }
+  determination set_overall_status on modify { create; delete; field DeliveryStatus; }
+
+  internal action recalc_item_delivery_status;
+
+  // Association
+  association _Header { with draft; }
+  association _ScheduleLine { create ( features : instance ); with draft; }
+
+  side effects
+  {
+    // Refresh Product details.
+    field ProductId affects field ProductDescription, field Plant, field SalesUnit, field NetPrice, field CurrencyCode, field NetAmount, field _Header.NetAmount;
+
+    // Refresh Item and Header Net Amount.
+    field RequestedQuantity affects field NetAmount, field _Header.NetAmount, field DeliveryStatus, field DeliverCriticality;
+    field NetPrice affects field NetAmount, field _Header.NetAmount;
+    field DeliveryStatus affects field _ScheduleLine.AvailabilityStatus;
+    field ConfirmedQuantity affects field DeliveryStatus, field DeliverCriticality;
+
+  }
+
+  mapping for zteam2_so_it corresponding extensible
+    {
+      SalesOrderId       = SALES_ORDER_ID;
+      SalesOrderItemId   = SALES_ORDER_ITEM_ID;
+      ProductId          = PRODUCT_ID;
+      Plant              = PLANT;
+      RequestedQuantity  = REQUESTED_QUANTITY;
+      ConfirmedQuantity  = CONFIRMED_QUANTITY;
+      DeliveryStatus     = DELIVERY_STATUS;
+      SalesUnit          = SALES_UNIT;
+      NetPrice           = NET_PRICE;
+      NetAmount          = NET_AMOUNT;
+      CurrencyCode       = CURRENCY_CODE;
+      CreatedBy          = CREATED_BY;
+      CreatedAt          = CREATED_AT;
+      LocalLastChangedBy = LOCAL_LAST_CHANGED_BY;
+      LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+      LastChangedAt      = LAST_CHANGED_AT;
+    }
+}
+
+define behavior for ZI_TEAM2_SCHED_LN alias ScheduleLine
+implementation in class ZBP_I_TEAM2_SCHED_LN unique
+persistent table zteam2_sched_ln
+draft table zteam2_sche_ln_d
+lock dependent by _Header
+authorization dependent by _Header
+etag master LocalLastChangedAt
+early numbering
+{
+  field ( readonly ) SalesOrderId, SalesOrderItemId, ScheduleLineId, CreatedBy, CreatedAt, LocalLastChangedBy, LocalLastChangedAt, LastChangedAt;
+  field ( readonly ) SalesUnit;
+  update ( features : instance );
+  delete ( features : instance );
+
+//  ancestor association _Header { with draft; }
+  association _Item { with draft; }
+  association _Header { with draft; }
+
+  validation check_requested_quantity on save { create; field RequestedQuantity; }
+  validation check_confirmed_quantity on save { create; field ConfirmedQuantity; }
+
+  determination set_sales_unit on modify { create; }
+  determination setAvailability on modify { create; field RequestedQuantity, RequestedDeliveryDate; }
+  determination set_delivery_status on modify { field ConfirmedQuantity, RequestedQuantity; }
+
+  action ( features : instance ) confirmDelivery result [1] $self;
+
+  field ( readonly ) AvailabilityStatus, ConfirmedQuantity, ConfirmedDeliveryDate;
+  side effects
+  {
+    field RequestedQuantity affects field AvailabilityStatus, field AvailabilityCriticality, permissions ( action confirmDelivery );
+    field RequestedDeliveryDate affects field AvailabilityStatus, field AvailabilityCriticality, permissions ( action confirmDelivery );
+    action confirmDelivery affects
+        field AvailabilityStatus,
+        field AvailabilityCriticality,
+        field ConfirmedQuantity,
+        field ConfirmedDeliveryDate,
+        field _Item.DeliveryStatus,
+        field _Item.DeliverCriticality,
+        field _Item.ConfirmedQuantity,
+        permissions ( action confirmDelivery );
+
+    field AvailabilityStatus affects field _Item.DeliveryStatus, field _Item.DeliverCriticality;
+
+  }
+  mapping for zteam2_sched_ln corresponding
+    {
+      SalesOrderId          = SALES_ORDER_ID;
+      SalesOrderItemId      = SALES_ORDER_ITEM_ID;
+      ScheduleLineId        = SCHEDULE_LINE_ID;
+      RequestedDeliveryDate = REQUESTED_DELIVERY_DATE;
+      RequestedQuantity     = REQUESTED_QUANTITY;
+      ConfirmedDeliveryDate = CONFIRMED_DELIVERY_DATE;
+      ConfirmedQuantity     = CONFIRMED_QUANTITY;
+      SalesUnit             = SALES_UNIT;
+      AvailabilityStatus    = AVAILABILITY_STATUS;
+      CreatedBy             = CREATED_BY;
+      CreatedAt             = CREATED_AT;
+      LocalLastChangedBy    = LOCAL_LAST_CHANGED_BY;
+      LocalLastChangedAt    = LOCAL_LAST_CHANGED_AT;
+      LastChangedAt         = LAST_CHANGED_AT;
+    }
+}

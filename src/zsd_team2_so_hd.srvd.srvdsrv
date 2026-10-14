@@ -1,0 +1,16 @@
+@EndUserText: {
+  label: 'Service Definition for Sales Order'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZCR_TEAM2_SO_HD'
+  }
+}
+define service ZSD_TEAM2_SO_HD
+  provider contracts odata_v4_ui {
+  expose ZCR_TEAM2_SO_HD    as Header;
+  expose ZC_TEAM2_SO_IT     as Item;
+  expose ZC_TEAM2_SCHED_LN  as ScheduleLine;
+  expose ZCR_TEAM2_PRODUCTS as Products;
+  expose ZC_TEAM2_PRICES    as Prices;
+}

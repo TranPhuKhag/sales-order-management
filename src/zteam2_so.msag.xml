@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZTEAM2_SO</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>Messages Class for Sales Order</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Customer &amp;1 does not exist.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Product &amp;1 does not exist.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Sales Order &amp;1 does not exist.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Customer &amp;1 is inactive.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Requested Delivery Date cannot be earlier than Sales Order Date.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Field &amp;1 is required.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Requested Quantity must be greater than 0.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Total Schedule Line Requested Quantity must not exceed Item Requested Qua</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>

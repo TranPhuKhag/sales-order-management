@@ -1,0 +1,8 @@
+@EndUserText.label: 'ZIR_TEAM2_SO_HD'
+@MappingRole: true
+define role ZIR_TEAM2_SO_HD {
+  grant select on ZIR_TEAM2_SO_HD
+    where CreatedBy = $session.user
+       or _Manager.UserName = $session.user;
+
+}

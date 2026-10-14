@@ -1,0 +1,75 @@
+
+@Metadata.layer: #CORE
+
+@UI.headerInfo: {
+  typeName: 'Schedule Line',
+  typeNamePlural: 'Schedule Lines',
+  title: {
+    type: #STANDARD,
+    value: 'ScheduleLineId'
+  }
+}
+
+annotate view ZC_TEAM2_SCHED_LN with
+{
+  @UI.lineItem: [
+    {
+      position: 10,
+      label: 'Schedule Line'
+    },
+    {
+      type: #FOR_ACTION,
+      dataAction: 'confirmDelivery',
+      label: 'Confirm Delivery',
+      position: 80
+    }
+  ]
+  ScheduleLineId;
+
+  @UI.lineItem: [
+    {
+      position: 20,
+      label: 'Requested Delivery Date'
+    }
+  ]
+  RequestedDeliveryDate;
+
+  @UI.lineItem: [
+    {
+      position: 30,
+      label: 'Requested Quantity'
+    }
+  ]
+  RequestedQuantity;
+
+  @UI.lineItem: [
+    {
+      position: 40,
+      label: 'Confirmed Delivery Date'
+    }
+  ]
+  ConfirmedDeliveryDate;
+
+  @UI.lineItem: [
+    {
+      position: 50,
+      label: 'Confirmed Quantity'
+    }
+  ]
+  ConfirmedQuantity;
+
+@UI.hidden: true
+  SalesUnit;
+
+  @UI.lineItem: [
+    {
+      position: 60,
+      label: 'Availability Status',
+      criticality: 'AvailabilityCriticality'
+    }
+  ]
+  AvailabilityStatus;
+
+  @UI.hidden: true
+  AvailabilityCriticality;
+}
