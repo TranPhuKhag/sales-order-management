@@ -46,7 +46,10 @@ early numbering
     field OverallStatus affects field OverallStatusCriticality;
     //  action confirmOrder affects field LifecycleStatus, field LifecycleStatusCriticality, permissions ( association _Item ), permissions ( action confirmOrder ), permissions ( action rejectOrder );
     //  action rejectOrder affects field LifecycleStatus, field OverallStatus, field LifecycleStatusCriticality, field OverallStatusCriticality;
-    entity _Item affects field NetAmount, field CurrencyCode ;
+    // Item changes (incl. Schedule Lines via Item) refresh Header totals/status.
+    entity _Item affects field NetAmount, field CurrencyCode,
+                         field OverallStatus, field OverallStatusCriticality,
+                         field LifecycleStatus, field LifecycleStatusCriticality;
       field SoldToPartyId affects $self;
       field ShipToPartyId affects $self;
 
@@ -138,13 +141,18 @@ early numbering
   side effects
   {
     // Refresh Product details.
-    field ProductId affects field ProductDescription, field Plant, field SalesUnit, field NetPrice, field CurrencyCode, field NetAmount, field _Header.NetAmount;
+    // Header totals are refreshed by the Header side effect "entity _Item";
+    // targets via the parent navigation (_Header.X) cannot be resolved by
+    // the UI on the Item object page and leave the Header context stale.
+    field ProductId affects field ProductDescription, field Plant, field SalesUnit, field NetPrice, field CurrencyCode, field NetAmount;
 
-    // Refresh Item and Header Net Amount.
-    field RequestedQuantity affects field NetAmount, field _Header.NetAmount, field DeliveryStatus, field DeliverCriticality;
-    field NetPrice affects field NetAmount, field _Header.NetAmount;
-    field DeliveryStatus affects field _ScheduleLine.AvailabilityStatus;
+    // Refresh Item Net Amount and delivery status.
+    field RequestedQuantity affects field NetAmount, field DeliveryStatus, field DeliverCriticality;
+    field NetPrice affects field NetAmount;
     field ConfirmedQuantity affects field DeliveryStatus, field DeliverCriticality;
+
+    // Schedule Line changes recalculate Item delivery data.
+    entity _ScheduleLine affects field ConfirmedQuantity, field DeliveryStatus, field DeliverCriticality;
 
   }
 
@@ -210,8 +218,6 @@ early numbering
         field _Item.DeliverCriticality,
         field _Item.ConfirmedQuantity,
         permissions ( action confirmDelivery );
-
-    field AvailabilityStatus affects field _Item.DeliveryStatus, field _Item.DeliverCriticality;
 
   }
   mapping for zteam2_sched_ln corresponding
