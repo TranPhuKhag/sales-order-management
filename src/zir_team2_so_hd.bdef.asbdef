@@ -33,7 +33,7 @@ early numbering
 
   determination set_initial_status on modify { create; }
 
-  association _Item { create ( features : instance ); with draft; } association _ScheduleLine { with draft; }
+  association _Item { create ( features : instance ); with draft; }
 
   internal action recalc_header_net_amount;
   // Recalculate the overall status of the Sales Order.

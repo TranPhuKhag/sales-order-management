@@ -161,7 +161,5 @@ define root view entity ZCR_TEAM2_SO_HD
 
       _ShipToCustomer : redirected to ZCR_TEAM2_CUSTOMER,
 
-      _ScheduleLine   : redirected to ZC_TEAM2_SCHED_LN,
-
       _Manager
 }
