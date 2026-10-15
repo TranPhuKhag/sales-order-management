@@ -12,6 +12,15 @@
 
 annotate view ZC_TEAM2_SCHED_LN with
 {
+  @UI.facet: [
+    {
+      id: 'ScheduleLineGeneralInfo',
+      label: 'Schedule Line Information',
+      purpose: #STANDARD,
+      position: 10,
+      type: #IDENTIFICATION_REFERENCE
+    }
+  ]
   @UI.lineItem: [
     {
       position: 10,
@@ -24,6 +33,7 @@ annotate view ZC_TEAM2_SCHED_LN with
       position: 80
     }
   ]
+    @UI.identification: [ { position: 10, label: 'Schedule Line' } ]
   ScheduleLineId;
 
   @UI.lineItem: [
@@ -31,7 +41,7 @@ annotate view ZC_TEAM2_SCHED_LN with
       position: 20,
       label: 'Requested Delivery Date'
     }
-  ]
+  ] @UI.identification: [ { position: 20, label: 'Requested Delivery Date' } ]
   RequestedDeliveryDate;
 
   @UI.lineItem: [
@@ -39,7 +49,7 @@ annotate view ZC_TEAM2_SCHED_LN with
       position: 30,
       label: 'Requested Quantity'
     }
-  ]
+  ]@UI.identification: [ { position: 30, label: 'Requested Quantity' } ]
   RequestedQuantity;
 
   @UI.lineItem: [
@@ -47,7 +57,7 @@ annotate view ZC_TEAM2_SCHED_LN with
       position: 40,
       label: 'Confirmed Delivery Date'
     }
-  ]
+  ]@UI.identification: [ { position: 40, label: 'Confirmed Delivery Date' } ]
   ConfirmedDeliveryDate;
 
   @UI.lineItem: [
@@ -55,7 +65,7 @@ annotate view ZC_TEAM2_SCHED_LN with
       position: 50,
       label: 'Confirmed Quantity'
     }
-  ]
+  ] @UI.identification: [ { position: 50, label: 'Confirmed Quantity' } ]
   ConfirmedQuantity;
 
 @UI.hidden: true
@@ -67,7 +77,7 @@ annotate view ZC_TEAM2_SCHED_LN with
       label: 'Availability Status',
       criticality: 'AvailabilityCriticality'
     }
-  ]
+  ] @UI.identification: [ { position: 60, label: 'Availability Status', criticality: 'AvailabilityCriticality' } ]
   AvailabilityStatus;
 
   @UI.hidden: true

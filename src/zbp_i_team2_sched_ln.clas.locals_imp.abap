@@ -182,9 +182,10 @@ CLASS lhc_scheduleline IMPLEMENTATION.
       IF <lfs_line>-AvailabilityStatus <> lc_status-available.
         APPEND VALUE #( %tky = <lfs_line>-%tky ) TO failed-ScheduleLine.
         APPEND VALUE #( %tky = <lfs_line>-%tky
-                        %msg = new_message_with_text(
-                          text = 'Only AVAILABLE Schedule Lines can be confirmed.'
-                          severity = if_abap_behv_message=>severity-error )
+                        %msg = NEW zcm_team2_so(
+  im_textid   = zcm_team2_so=>c_schedule_not_available
+  im_severity = if_abap_behv_message=>severity-error
+)
                         %element-AvailabilityStatus = if_abap_behv=>mk-on ) TO reported-ScheduleLine.
         CONTINUE.
       ENDIF.

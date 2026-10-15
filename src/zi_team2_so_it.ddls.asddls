@@ -7,7 +7,7 @@ define view entity ZI_TEAM2_SO_IT
 
   association        to parent ZIR_TEAM2_SO_HD as _Header  on $projection.SalesOrderId = _Header.SalesOrderId
   association [1..1] to ZIR_TEAM2_PRODUCTS     as _Product on $projection.ProductId = _Product.ProductId
-  composition [0..*] of ZI_TEAM2_SCHED_LN as _ScheduleLine
+  composition [0..*] of ZI_TEAM2_SCHED_LN      as _ScheduleLine
 
 {
   key Item.sales_order_id        as SalesOrderId,
@@ -39,11 +39,22 @@ define view entity ZI_TEAM2_SO_IT
 
       Item.currency_code         as CurrencyCode,
 
+
+      @Semantics.user.createdBy: true
       Item.created_by            as CreatedBy,
+
+      @Semantics.systemDateTime.createdAt: true
       Item.created_at            as CreatedAt,
+
+      @Semantics.user.localInstanceLastChangedBy: true
       Item.local_last_changed_by as LocalLastChangedBy,
+
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
       Item.local_last_changed_at as LocalLastChangedAt,
+
+      @Semantics.systemDateTime.lastChangedAt: true
       Item.last_changed_at       as LastChangedAt,
+
 
       _Product.ProductDesc       as ProductDescription,
 
