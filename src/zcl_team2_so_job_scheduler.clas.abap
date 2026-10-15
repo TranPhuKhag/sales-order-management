@@ -5,8 +5,8 @@
 * Created date       : 13/10/2026
 * Content explanation:
 *   Schedule the Sales Order Overdue background job.
-*   Configure the job to run once per day at 00:05.
-*   Use the system timezone to determine the execution timestamp.
+*   Configure the job to run once per day at 00:05 Vietnam time.
+*   The BTP system timezone is UTC, so the schedule uses UTC+7.
 *   Stop the recurring schedule after 365 executions.
 *---------------------------------------------------------------------*
 * Job Template:
@@ -24,7 +24,11 @@ CLASS zcl_team2_so_job_scheduler DEFINITION
 
     CONSTANTS:
       lc_job_template TYPE cl_apj_rt_api=>ty_template_name VALUE 'ZJOBT_TEAM2_SO_OVERDUE',
-      lc_job_text     TYPE cl_apj_rt_api=>ty_job_text      VALUE 'TEAM2_SO_OVERDUE_DAILY'.
+      lc_job_text     TYPE cl_apj_rt_api=>ty_job_text      VALUE 'TEAM2_SO_OVERDUE_DAILY',
+      " Vietnam time. The system timezone of BTP is UTC: 00:05 system time
+      " would run the job at 07:05 in Vietnam.
+      lc_timezone     TYPE timezone                        VALUE 'UTC+7',
+      lc_start_time   TYPE t                               VALUE '000500'.
 
 ENDCLASS.
 
@@ -39,8 +43,8 @@ CLASS zcl_team2_so_job_scheduler IMPLEMENTATION.
 * Created by         : KHANGTP5
 * Created date       : 11/10/2026
 * Content explanation:
-*   Determine the current system timezone and date.
-*   Schedule the first execution for the next day at 00:05.
+*   Determine the current date in Vietnam time (UTC+7).
+*   Schedule the first execution for the next 00:05 Vietnam time.
 *   Configure a daily recurring Application Job.
 *   Limit the recurring schedule to 365 executions.
 *   Output the created Job Name and Job Count after scheduling.
@@ -54,31 +58,28 @@ CLASS zcl_team2_so_job_scheduler IMPLEMENTATION.
       ls_end_info        TYPE cl_apj_rt_api=>ty_end_info,
       lv_jobname         TYPE cl_apj_rt_api=>ty_jobname,
       lv_jobcount        TYPE cl_apj_rt_api=>ty_jobcount,
-      lv_timezone        TYPE timezone,
       lv_date            TYPE d,
       lv_time            TYPE t,
       lv_now             TYPE timestamp,
       lv_start_timestamp TYPE timestamp.
 
-    " Determine the system timezone.
-    lv_timezone = cl_abap_tstmp=>get_system_timezone( ).
-
     " Get the current timestamp.
     GET TIME STAMP FIELD lv_now.
 
-    " Convert the current timestamp to the scheduling timezone.
+    " Convert the current timestamp to Vietnam time.
     CONVERT TIME STAMP lv_now
-      TIME ZONE lv_timezone
+      TIME ZONE lc_timezone
       INTO DATE lv_date TIME lv_time.
 
-    " Schedule the first execution for tomorrow at 00:05.
-    lv_date = lv_date + 1.
-    lv_time = '000500'.
+    " First execution: the next 00:05 Vietnam time (today if not yet passed).
+    IF lv_time >= lc_start_time.
+      lv_date = lv_date + 1.
+    ENDIF.
 
-    " Convert the local execution time to a timestamp.
-    CONVERT DATE lv_date TIME lv_time
+    " Convert the local execution time to a UTC timestamp.
+    CONVERT DATE lv_date TIME lc_start_time
       INTO TIME STAMP lv_start_timestamp
-      TIME ZONE lv_timezone.
+      TIME ZONE lc_timezone.
 
     " Set the first execution timestamp.
     ls_start_info-timestamp = lv_start_timestamp.
@@ -87,7 +88,7 @@ CLASS zcl_team2_so_job_scheduler IMPLEMENTATION.
     ls_scheduling_info-periodic_granularity = cl_apj_rt_api=>period_days.
     ls_scheduling_info-periodic_value       = 1.
     ls_scheduling_info-test_mode            = abap_false.
-    ls_scheduling_info-timezone             = lv_timezone.
+    ls_scheduling_info-timezone             = lc_timezone.
 
     " Stop the recurring schedule after 365 executions.
     ls_end_info-type           = cl_apj_rt_api=>period_end_by_nr_of_executions.
@@ -112,8 +113,8 @@ CLASS zcl_team2_so_job_scheduler IMPLEMENTATION.
         out->write( |Job scheduled successfully.| ).
         out->write( |Job Name: { lv_jobname }| ).
         out->write( |Job Count: { lv_jobcount }| ).
-        out->write( |Frequency: Every day at 00:05| ).
-        out->write( |Timezone: { lv_timezone }| ).
+        out->write( |First run: { lv_date DATE = ISO } 00:05 ({ lc_timezone })| ).
+        out->write( |Frequency: Every day at 00:05 ({ lc_timezone })| ).
 
       CATCH cx_apj_rt INTO DATA(lx_job).
 

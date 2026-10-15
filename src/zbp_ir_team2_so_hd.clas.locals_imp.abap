@@ -944,9 +944,14 @@ ENDMETHOD.
   METHOD recalc_overall_status.
     DATA: lt_headers_update   TYPE TABLE FOR UPDATE zir_team2_so_hd\\Header,
           lv_overall_status   TYPE zteam2_so_hd-overall_status,
-          lv_lifecycle_status TYPE zteam2_so_hd-lifecycle_status.
+          lv_lifecycle_status TYPE zteam2_so_hd-lifecycle_status,
+          lv_now              TYPE timestamp,
+          lv_today            TYPE d.
 
-    DATA(lv_today) = cl_abap_context_info=>get_system_date( ).
+    " Compare against today's date in Vietnam (UTC+7). The BTP system date
+    " is UTC and is still yesterday when the overdue job runs at 00:05.
+    GET TIME STAMP FIELD lv_now.
+    CONVERT TIME STAMP lv_now TIME ZONE 'UTC+7' INTO DATE lv_today.
 
     READ ENTITIES OF zir_team2_so_hd IN LOCAL MODE
       ENTITY Header
