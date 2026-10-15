@@ -1,4 +1,6 @@
 @Metadata.layer: #CORE
+@UI.headerInfo.typeName: 'Sales Order'
+@UI.headerInfo.typeNamePlural: 'Sales Orders'
 @UI.headerInfo.title.type: #STANDARD
 @UI.headerInfo.title.value: 'SalesOrderId'
 @UI.headerInfo.description.type: #STANDARD
