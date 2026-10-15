@@ -102,7 +102,7 @@ CLASS zcl_team2_numbering_utility IMPLEMENTATION.
 *---------------------------------------------------------------------*
     DATA(lv_next_sequence) = iv_current + iv_step.
 
-    rv_sequence = |{ lv_next_sequence WIDTH = iv_width ALIGN = RIGHT PAD = '0' }|.
+    rv_sequence = |{ lv_next_sequence }|.
 
   ENDMETHOD.
 

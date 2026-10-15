@@ -105,6 +105,188 @@ CLASS zcm_team2_so DEFINITION
         attr3 TYPE scx_attrname VALUE '',
         attr4 TYPE scx_attrname VALUE '',
       END OF c_schedule_quantity_exceeded.
+
+    " Begin change: KHANGTP5 - 14/10/2026
+    " Add missing T100 messages for Sales Order RAP processing.
+
+    " 009 - Sales Order number range is nearly exhausted.
+    CONSTANTS:
+      BEGIN OF c_number_range_warning,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '009',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_number_range_warning.
+
+    " 010 - Not enough Sales Order numbers are available.
+    CONSTANTS:
+      BEGIN OF c_number_range_exhausted,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '010',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_number_range_exhausted.
+
+    " 011 - Sales Order Items must use the same valid currency.
+    CONSTANTS:
+      BEGIN OF c_invalid_item_currency,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '011',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_invalid_item_currency.
+
+    " 012 - Cannot recalculate Sales Order status.
+    CONSTANTS:
+      BEGIN OF c_recalc_overall_status_failed,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '012',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_recalc_overall_status_failed.
+
+    " 013 - Sales area combination is invalid or inactive.
+    CONSTANTS:
+      BEGIN OF c_invalid_sales_area,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '013',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_invalid_sales_area.
+
+    " 014 - Ship-to Party does not exist or is inactive.
+    CONSTANTS:
+      BEGIN OF c_invalid_ship_to_party,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '014',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_invalid_ship_to_party.
+
+    " 015 - Item quantity/status recalculation failed.
+    CONSTANTS:
+      BEGIN OF c_recalc_item_status_failed,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '015',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_recalc_item_status_failed.
+
+    " 016 - Sales Order Header status recalculation failed.
+    CONSTANTS:
+      BEGIN OF c_recalc_header_status_failed,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '016',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_recalc_header_status_failed.
+
+    " 017 - Confirm Delivery is only allowed for active Sales Orders.
+    CONSTANTS:
+      BEGIN OF c_confirm_draft_not_allowed,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '017',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_confirm_draft_not_allowed.
+
+    " 018 - Only AVAILABLE Schedule Lines can be confirmed.
+    CONSTANTS:
+      BEGIN OF c_schedule_not_available,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '018',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_schedule_not_available.
+
+    " 019 - Item is complete, or requested delivery data is invalid.
+    CONSTANTS:
+      BEGIN OF c_invalid_delivery_data,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '019',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_invalid_delivery_data.
+
+    " 020 - Confirmed quantity would exceed the Item Requested Quantity.
+    CONSTANTS:
+      BEGIN OF c_confirm_qty_exceeded,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '020',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_confirm_qty_exceeded.
+
+    " 021 - Insufficient stock to confirm this Schedule Line.
+    CONSTANTS:
+      BEGIN OF c_insufficient_stock,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '021',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_insufficient_stock.
+
+    " 022 - Product stock consumption failed.
+    CONSTANTS:
+      BEGIN OF c_stock_consumption_failed,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '022',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_stock_consumption_failed.
+
+    " 023 - Could not recalculate the Item and Sales Order statuses.
+    CONSTANTS:
+      BEGIN OF c_recalc_delivery_failed,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '023',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_recalc_delivery_failed.
+
+    " 024 - Confirmed Quantity or Delivery Date conflicts with availability status.
+    CONSTANTS:
+      BEGIN OF c_invalid_confirmed_quantity,
+        msgid TYPE symsgid VALUE 'ZTEAM2_SO',
+        msgno TYPE symsgno VALUE '024',
+        attr1 TYPE scx_attrname VALUE '',
+        attr2 TYPE scx_attrname VALUE '',
+        attr3 TYPE scx_attrname VALUE '',
+        attr4 TYPE scx_attrname VALUE '',
+      END OF c_invalid_confirmed_quantity.
+
+    " End change: KHANGTP5 - 14/10/2026
+
     DATA:
       sales_order_id   TYPE zteam2_so_hd-sales_order_id,
       sold_to_party_id TYPE zteam2_so_hd-sold_to_party_id,

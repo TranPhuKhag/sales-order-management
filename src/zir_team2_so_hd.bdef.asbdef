@@ -28,12 +28,11 @@ early numbering
 
 
   determination set_initial_status on modify { create; }
-
-  association _Item { create ( features : instance ); with draft; } association _ScheduleLine { with draft; }
-
+  association _Item { create ( features : instance ); with draft; }
   internal action recalc_header_net_amount;
-  // Recalculate the overall status of the Sales Order.
   action recalc_overall_status;
+
+  // Recalculate the overall status of the Sales Order.
 
   side effects
   {
@@ -42,9 +41,9 @@ early numbering
     field OverallStatus affects field OverallStatusCriticality;
     //  action confirmOrder affects field LifecycleStatus, field LifecycleStatusCriticality, permissions ( association _Item ), permissions ( action confirmOrder ), permissions ( action rejectOrder );
     //  action rejectOrder affects field LifecycleStatus, field OverallStatus, field LifecycleStatusCriticality, field OverallStatusCriticality;
-    entity _Item affects field NetAmount, field CurrencyCode ;
-      field SoldToPartyId affects $self;
-      field ShipToPartyId affects $self;
+    entity _Item affects field NetAmount, field CurrencyCode;
+    field SoldToPartyId affects $self;
+    field ShipToPartyId affects $self;
 
   }
 
@@ -179,7 +178,7 @@ early numbering
   update ( features : instance );
   delete ( features : instance );
 
-//  ancestor association _Header { with draft; }
+  //  ancestor association _Header { with draft; }
   association _Item { with draft; }
   association _Header { with draft; }
 

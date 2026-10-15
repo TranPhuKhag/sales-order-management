@@ -17,7 +17,6 @@ use etag
   use action Prepare;
 
   use association _Item { create;  with draft; }
-  use association _ScheduleLine { with draft; }
 }
 
 

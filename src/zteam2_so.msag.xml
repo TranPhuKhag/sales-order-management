@@ -56,6 +56,108 @@
      <MSGNR>008</MSGNR>
      <TEXT>Total Schedule Line Requested Quantity must not exceed Item Requested Qua</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Sales Order number range is nearly exhausted.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Not enough Sales Order numbers are available.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Sales Order Items must use the same valid currency.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Cannot recalculate Sales Order status.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Sales area combination is invalid or inactive.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Ship-to Party does not exist or is inactive.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Item quantity/status recalculation failed.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Sales Order Header status recalculation failed.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Confirm Delivery is only allowed for active Sales Orders.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Only AVAILABLE Schedule Lines can be confirmed.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Item is complete, or requested delivery data is invalid.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Confirmed quantity would exceed the Item Requested Quantity.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Insufficient stock to confirm this Schedule Line.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>022</MSGNR>
+     <TEXT>Product stock consumption failed.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>023</MSGNR>
+     <TEXT>Could not recalculate the Item and Sales Order statuses.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>024</MSGNR>
+     <TEXT>Confirmed Quantity or Delivery Date conflicts with availability status.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZTEAM2_SO</ARBGB>
+     <MSGNR>025</MSGNR>
+     <TEXT>Overdue job: &amp;1 Sales Orders could not be updated (locked or error)</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

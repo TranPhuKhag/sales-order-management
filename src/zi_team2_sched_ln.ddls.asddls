@@ -1,18 +1,15 @@
-
 @AbapCatalog.viewEnhancementCategory: [#NONE]
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Sales Order Schedule Line Interface View'
-@Metadata.ignorePropagatedAnnotations: true
+@Metadata.ignorePropagatedAnnotations: false
 
 define view entity ZI_TEAM2_SCHED_LN
   as select from zteam2_sched_ln as ScheduleLine
 
-  association to parent ZI_TEAM2_SO_IT as _Item
-    on  $projection.SalesOrderId     = _Item.SalesOrderId
-    and $projection.SalesOrderItemId = _Item.SalesOrderItemId
+  association to parent ZI_TEAM2_SO_IT as _Item   on  $projection.SalesOrderId     = _Item.SalesOrderId
+                                                  and $projection.SalesOrderItemId = _Item.SalesOrderItemId
 
-  association to ZIR_TEAM2_SO_HD as _Header
-    on $projection.SalesOrderId = _Header.SalesOrderId
+  association to ZIR_TEAM2_SO_HD       as _Header on  $projection.SalesOrderId = _Header.SalesOrderId
 
 
 {
@@ -33,19 +30,27 @@ define view entity ZI_TEAM2_SCHED_LN
 
       ScheduleLine.availability_status     as AvailabilityStatus, // CANCELLED / PENDING / CONFIRMED
 
-case
-  when ScheduleLine.availability_status = 'CONFIRMED' then 0
-  when ScheduleLine.availability_status = 'AVAILABLE'   then 0
-  when ScheduleLine.availability_status = 'UNAVAILABLE' then 0
-  else 0
-end as AvailabilityCriticality,
+      case
+        when ScheduleLine.availability_status = 'CONFIRMED' then 0
+        when ScheduleLine.availability_status = 'AVAILABLE'   then 0
+        when ScheduleLine.availability_status = 'UNAVAILABLE' then 0
+        else 0
+      end                                  as AvailabilityCriticality,
 
+      @Semantics.user.createdBy: true
       ScheduleLine.created_by              as CreatedBy,
-      ScheduleLine.created_at              as CreatedAt,
-      ScheduleLine.local_last_changed_by   as LocalLastChangedBy,
-      ScheduleLine.local_last_changed_at   as LocalLastChangedAt,
-      ScheduleLine.last_changed_at         as LastChangedAt,
 
+      @Semantics.systemDateTime.createdAt: true
+      ScheduleLine.created_at              as CreatedAt,
+
+      @Semantics.user.localInstanceLastChangedBy: true
+      ScheduleLine.local_last_changed_by   as LocalLastChangedBy,
+
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      ScheduleLine.local_last_changed_at   as LocalLastChangedAt,
+
+      @Semantics.systemDateTime.lastChangedAt: true
+      ScheduleLine.last_changed_at         as LastChangedAt,
       _Item,
       _Header
 }
