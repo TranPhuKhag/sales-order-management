@@ -92,7 +92,7 @@ CLASS zcl_team2_so_overdue_job IMPLEMENTATION.
     IF lv_failed_count > 0.
       RAISE EXCEPTION TYPE cx_apj_rt_content
         MESSAGE ID 'ZTEAM2_SO'
-        NUMBER 020
+        NUMBER 025
         WITH lv_failed_count.
     ENDIF.
 
